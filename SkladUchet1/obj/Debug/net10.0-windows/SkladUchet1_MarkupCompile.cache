@@ -1,5 +1,5 @@
 ﻿SkladUchet1
-1.0.0.0
+
 
 winexe
 C#
@@ -12,7 +12,7 @@ TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_O
 C:\Users\user\source\repos\SkladUchet1\SkladUchet1\App.xaml
 21432631774
 
-17-309332996
+15-2000224821
 224210318387
 AddBatchWindow.xaml;MainWindow.xaml;
 

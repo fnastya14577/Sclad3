@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SkladUchet1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c77460d6d7ba914ac6a856efc9c8f1f77fa7f64")]
 [assembly: System.Reflection.AssemblyProductAttribute("SkladUchet1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SkladUchet1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
