@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using SkladUchet1.Data;
+using SkladUchet1.Models;
 
 namespace SkladUchet1.Services;
 
@@ -18,7 +19,7 @@ public static class BatchService
         batch.Remaining -= amount;
         batch.CalculateStatus();
 
-        var writeOff = new Models.WriteOff
+        var writeOff = new WriteOff
         {
             BatchId = batch.Id,
             UserId = userId,
@@ -26,6 +27,7 @@ public static class BatchService
             Date = DateTime.Now,
             Reason = reason
         };
+
 
         db.WriteOffs.Add(writeOff);
         db.SaveChanges();

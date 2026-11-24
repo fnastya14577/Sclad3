@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -34,14 +35,30 @@ public class MainViewModel : INotifyPropertyChanged
         set { _statusText = value; OnPropertyChanged(); }
     }
 
+    private string _searchText = "";
+    public string SearchText
+    {
+        get => _searchText;
+        set { _searchText = value; OnPropertyChanged(); FilterBatches(); }
+    }
+
+    private string _reportText = "";
+    public string ReportText
+    {
+        get => _reportText;
+        set { _reportText = value; OnPropertyChanged(); }
+    }
+
     public RelayCommand RefreshCommand { get; }
     public RelayCommand WriteOffCommand { get; }
+    public RelayCommand SaveReportCommand { get; }
 
     public MainViewModel()
     {
         _db.Database.EnsureCreated();
         RefreshCommand = new RelayCommand(_ => LoadData());
         WriteOffCommand = new RelayCommand(_ => DoWriteOff(), _ => SelectedBatch != null);
+        SaveReportCommand = new RelayCommand(_ => SaveReport());
         LoadData();
     }
 
@@ -66,7 +83,50 @@ public class MainViewModel : INotifyPropertyChanged
         foreach (var w in _db.WriteOffs.Include(w => w.Batch).OrderByDescending(w => w.Date).ToList())
             WriteOffs.Add(w);
 
+        UpdateReport();
+        FilterBatches();
+    }
+
+    private void FilterBatches()
+    {
+        var filtered = string.IsNullOrWhiteSpace(SearchText)
+            ? _db.Batches.Include(b => b.Product).ToList()
+            : _db.Batches.Include(b => b.Product).Where(b => b.Product.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) || b.BatchNumber.Contains(SearchText, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        Batches.Clear();
+        foreach (var b in filtered)
+        {
+            b.CalculateStatus();
+            Batches.Add(b);
+        }
         StatusText = $"Товаров: {Products.Count} | Партий: {Batches.Count} | Требуют внимания: {Alerts.Count}";
+    }
+
+    private void UpdateReport()
+    {
+        var totalProducts = Products.Count;
+        var totalBatches = Batches.Count;
+        var expired = Batches.Count(b => b.Status == "Просрочено");
+        var expiringSoon = Batches.Count(b => b.Status == "Истекает скоро");
+
+        ReportText = $"Всего товаров: {totalProducts}\n" +
+                     $"Всего партий на складе: {totalBatches}\n" +
+                     $"Просрочено: {expired}\n" +
+                     $"Истекает скоро: {expiringSoon}\n\n" +
+                     $"Общая стоимость остатков: {Batches.Sum(b => b.Remaining * (b.Product?.Price ?? 0)):C}";
+    }
+
+    private void SaveReport()
+    {
+        try
+        {
+            File.WriteAllText("report.txt", ReportText);
+            MessageBox.Show("Отчет сохранен в файл report.txt", "Успех");
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Ошибка");
+        }
     }
 
     private void DoWriteOff()

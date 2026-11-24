@@ -39,5 +39,11 @@ public class AppDbContext : DbContext
             new Product { Id = 1, Name = "Молоко", CategoryId = 1, Unit = "л", Price = 80, MinShelfLifeDays = 5 },
             new Product { Id = 2, Name = "Парацетамол", CategoryId = 2, Unit = "уп", Price = 150, MinShelfLifeDays = 30 }
         );
+
+        modelBuilder.Entity<Batch>().HasData(
+            new Batch { Id = 1, ProductId = 1, BatchNumber = "МОЛ-001", Quantity = 10, Remaining = 10, ReceiptDate = DateTime.Today.AddDays(-5), ExpiryDate = DateTime.Today.AddDays(2) },
+            new Batch { Id = 2, ProductId = 2, BatchNumber = "ПАР-002", Quantity = 50, Remaining = 50, ReceiptDate = DateTime.Today.AddDays(-2), ExpiryDate = DateTime.Today.AddDays(30) },
+            new Batch { Id = 3, ProductId = 1, BatchNumber = "МОЛ-003", Quantity = 5, Remaining = 5, ReceiptDate = DateTime.Today.AddDays(-10), ExpiryDate = DateTime.Today.AddDays(-2) }
+        );
     }
 }

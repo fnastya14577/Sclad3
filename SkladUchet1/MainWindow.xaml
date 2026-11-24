@@ -40,19 +40,32 @@
         <Border Grid.Row="2" Background="White" CornerRadius="8" Margin="8,0,8,16">
             <TabControl Background="Transparent" BorderThickness="0" Margin="8">
                 <TabItem Header="ПАРТИИ ТОВАРОВ">
-                    <DataGrid ItemsSource="{Binding Batches}" SelectedItem="{Binding SelectedBatch}"
-                              AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
-                              RowBackground="White" AlternatingRowBackground="#FAFAFA"
-                              HeadersVisibility="Column" GridLinesVisibility="Horizontal">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Товар" Binding="{Binding Product.Name}" Width="*"/>
-                            <DataGridTextColumn Header="Партия" Binding="{Binding BatchNumber}" Width="120"/>
-                            <DataGridTextColumn Header="Остаток" Binding="{Binding Remaining}" Width="100"/>
-                            <DataGridTextColumn Header="Годен до" Binding="{Binding ExpiryDate, StringFormat=dd.MM.yyyy}" Width="120"/>
-                            <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="150"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                            <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="200" Height="30" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+
+                        <DataGrid Grid.Row="1" ItemsSource="{Binding Batches}" SelectedItem="{Binding SelectedBatch}"
+                                  AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                                  RowBackground="White" AlternatingRowBackground="#FAFAFA"
+                                  HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Товар" Binding="{Binding Product.Name}" Width="*"/>
+                                <DataGridTextColumn Header="Партия" Binding="{Binding BatchNumber}" Width="120"/>
+                                <DataGridTextColumn Header="Остаток" Binding="{Binding Remaining}" Width="100"/>
+                                <DataGridTextColumn Header="Годен до" Binding="{Binding ExpiryDate, StringFormat=dd.MM.yyyy}" Width="120"/>
+                                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="150"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
                 </TabItem>
+
                 <TabItem Header="ИСТОРИЯ СПИСАНИЙ">
                     <DataGrid ItemsSource="{Binding WriteOffs}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
                         <DataGrid.Columns>
@@ -62,6 +75,14 @@
                             <DataGridTextColumn Header="Причина" Binding="{Binding Reason}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                </TabItem>
+
+                <TabItem Header="ОТЧЕТЫ">
+                    <StackPanel Margin="20">
+                        <TextBlock Text="Сводка по складу" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+                        <TextBlock Text="{Binding ReportText}" FontSize="14" TextWrapping="Wrap"/>
+                        <Button Content="Сохранить отчет в файл" Command="{Binding SaveReportCommand}" Width="200" Height="35" Margin="0,20,0,0" Background="#81C784" Foreground="White" BorderThickness="0"/>
+                    </StackPanel>
                 </TabItem>
             </TabControl>
         </Border>
